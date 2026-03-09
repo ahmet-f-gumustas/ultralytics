@@ -39,7 +39,7 @@ import platform
 import re
 import threading
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import cv2
 import numpy as np
@@ -508,6 +508,6 @@ class BasePredictor:
         for callback in self.callbacks.get(event, []):
             callback(self)
 
-    def add_callback(self, event: str, func: callable):
+    def add_callback(self, event: str, func: Callable):
         """Add a callback function for a specific event."""
         self.callbacks[event].append(func)
