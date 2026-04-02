@@ -159,12 +159,7 @@ class DetectionTrainer(BaseTrainer):
         if cls_pw > 0:
             classes = np.concatenate([lb["cls"].flatten() for lb in self.train_loader.dataset.labels], 0)
             class_counts = np.bincount(classes.astype(int), minlength=self.data["nc"]).astype(float)
-
-            # Warn about unseen classes and clamp to avoid extreme weights
-            missing = np.where(class_counts == 0)[0]
-            if len(missing):
-                LOGGER.warning(f"Classes {missing.tolist()} have 0 samples; their weights will be set to 1.0")
-            class_counts[missing] = 1.0
+            class_counts = np.where(class_counts == 0, 1.0, class_counts)
 
             weights = (1.0 / class_counts) ** cls_pw  # apply power directly
             weights = weights / weights.mean()  # normalize so mean equals 1.0
