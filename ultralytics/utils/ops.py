@@ -100,8 +100,13 @@ def segment2box(segment: np.ndarray, width: int = 640, height: int = 640) -> np.
 
 
 def scale_boxes(
-    img1_shape: tuple, boxes: torch.Tensor, img0_shape: tuple, ratio_pad: tuple | None = None, padding: bool = True, xywh: bool = False
-) -> torch.Tensor:
+    img1_shape: tuple,
+    boxes: torch.Tensor | np.ndarray,
+    img0_shape: tuple,
+    ratio_pad: tuple | None = None,
+    padding: bool = True,
+    xywh: bool = False,
+) -> torch.Tensor | np.ndarray:
     """Rescale bounding boxes from one image shape to another.
 
     Rescales bounding boxes from img1_shape to img0_shape, accounting for padding and aspect ratio changes. Supports
