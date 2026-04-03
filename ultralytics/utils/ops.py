@@ -70,7 +70,7 @@ class Profile(contextlib.ContextDecorator):
         return time.perf_counter()
 
 
-def segment2box(segment, width: int = 640, height: int = 640):
+def segment2box(segment: np.ndarray, width: int = 640, height: int = 640) -> np.ndarray:
     """Convert segment coordinates to bounding box coordinates.
 
     Converts a single segment label to a box label by finding the minimum and maximum x and y coordinates. Applies
@@ -99,7 +99,9 @@ def segment2box(segment, width: int = 640, height: int = 640):
     )  # xyxy
 
 
-def scale_boxes(img1_shape, boxes, img0_shape, ratio_pad=None, padding: bool = True, xywh: bool = False):
+def scale_boxes(
+    img1_shape: tuple, boxes: torch.Tensor, img0_shape: tuple, ratio_pad: tuple | None = None, padding: bool = True, xywh: bool = False
+) -> torch.Tensor:
     """Rescale bounding boxes from one image shape to another.
 
     Rescales bounding boxes from img1_shape to img0_shape, accounting for padding and aspect ratio changes. Supports
