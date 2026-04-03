@@ -430,7 +430,7 @@ class v8DetectionLoss:
         # Cls loss with optional class weighting
         bce_loss = self.bce(pred_scores, target_scores.to(dtype))  # (bs, num_anchors, nc)
         if self.class_weights is not None:
-            bce_loss *= bce_loss
+            bce_loss *= self.class_weights
         loss[1] = bce_loss.sum() / target_scores_sum  # BCE
 
         # Bbox loss
