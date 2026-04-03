@@ -352,7 +352,7 @@ class v8DetectionLoss:
         # Class weights for handling imbalanced datasets
         self.class_weights = getattr(model, "class_weights", None)
         if self.class_weights is not None:
-            self.class_weights = self.class_weights.to(device)
+            self.class_weights = self.class_weights.to(device).view(1, 1, -1)
 
         self.assigner = TaskAlignedAssigner(
             topk=tal_topk,
@@ -430,7 +430,7 @@ class v8DetectionLoss:
         # Cls loss with optional class weighting
         bce_loss = self.bce(pred_scores, target_scores.to(dtype))  # (bs, num_anchors, nc)
         if self.class_weights is not None:
-            bce_loss = bce_loss * self.class_weights.view(1, 1, -1)
+            bce_loss *= bce_loss
         loss[1] = bce_loss.sum() / target_scores_sum  # BCE
 
         # Bbox loss

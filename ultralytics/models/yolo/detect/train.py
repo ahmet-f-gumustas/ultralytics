@@ -155,18 +155,17 @@ class DetectionTrainer(BaseTrainer):
         raised to the power of cls_pw (0 < cls_pw <= 1 dampens, cls_pw > 1 amplifies).
         Final weights are normalized so their mean equals 1.0.
         """
-        cls_pw = getattr(self.args, "cls_pw", 0.0)
-        if cls_pw > 0:
-            classes = np.concatenate([lb["cls"].flatten() for lb in self.train_loader.dataset.labels], 0)
-            class_counts = np.bincount(classes.astype(int), minlength=self.data["nc"]).astype(float)
-            class_counts = np.where(class_counts == 0, 1.0, class_counts)
+        assert 0 <= self.args.cls_pw <= 1.0, "cls_pw must be in the range [0, 1]"
+        if self.args.cls_pw == 0.0:
+            return
+        classes = np.concatenate([lb["cls"].flatten() for lb in self.train_loader.dataset.labels], 0)
+        class_counts = np.bincount(classes.astype(int), minlength=self.data["nc"]).astype(float)
+        class_counts = np.where(class_counts == 0, 1.0, class_counts)
 
-            weights = (1.0 / class_counts) ** cls_pw  # apply power directly
-            weights = weights / weights.mean()  # normalize so mean equals 1.0
-            self.model.class_weights = torch.from_numpy(weights).to(self.device)
-            LOGGER.info(f"Class weights: {self.model.class_weights.cpu().numpy().round(3)}")
-        else:
-            self.model.class_weights = None
+        weights = (1.0 / class_counts) ** self.args.cls_pw  # apply power directly
+        weights = weights / weights.mean()  # normalize so mean equals 1.0
+        self.model.class_weights = torch.from_numpy(weights).to(self.device)
+        LOGGER.info(f"Class weights: {self.model.class_weights.cpu().numpy().round(3)}")
 
     def get_model(self, cfg: str | None = None, weights: str | None = None, verbose: bool = True):
         """Return a YOLO detection model.
