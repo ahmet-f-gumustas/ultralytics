@@ -114,14 +114,14 @@ def scale_boxes(
 
     Args:
         img1_shape (tuple): Shape of the source image (height, width).
-        boxes (torch.Tensor): Bounding boxes to rescale in format (N, 4).
+        boxes (torch.Tensor | np.ndarray): Bounding boxes to rescale in format (N, 4).
         img0_shape (tuple): Shape of the target image (height, width).
         ratio_pad (tuple, optional): Tuple of (ratio, pad) for scaling. If None, calculated from image shapes.
         padding (bool): Whether boxes are based on YOLO-style augmented images with padding.
         xywh (bool): Whether box format is xywh (True) or xyxy (False).
 
     Returns:
-        (torch.Tensor): Rescaled bounding boxes in the same format as input.
+        (torch.Tensor | np.ndarray): Rescaled bounding boxes in the same format as input.
     """
     if ratio_pad is None:  # calculate from img0_shape
         gain = min(img1_shape[0] / img0_shape[0], img1_shape[1] / img0_shape[1])  # gain  = old / new
