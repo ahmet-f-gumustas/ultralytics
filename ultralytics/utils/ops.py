@@ -100,9 +100,9 @@ def segment2box(segment: np.ndarray, width: int = 640, height: int = 640) -> np.
 
 
 def scale_boxes(
-    img1_shape: tuple,
+    img1_shape: tuple[int, int],
     boxes: torch.Tensor | np.ndarray,
-    img0_shape: tuple,
+    img0_shape: tuple[int, int],
     ratio_pad: tuple | None = None,
     padding: bool = True,
     xywh: bool = False,
@@ -113,9 +113,9 @@ def scale_boxes(
     both xyxy and xywh box formats.
 
     Args:
-        img1_shape (tuple): Shape of the source image (height, width).
+        img1_shape (tuple[int, int]): Shape of the source image (height, width).
         boxes (torch.Tensor | np.ndarray): Bounding boxes to rescale in format (N, 4).
-        img0_shape (tuple): Shape of the target image (height, width).
+        img0_shape (tuple[int, int]): Shape of the target image (height, width).
         ratio_pad (tuple, optional): Tuple of (ratio, pad) for scaling. If None, calculated from image shapes.
         padding (bool): Whether boxes are based on YOLO-style augmented images with padding.
         xywh (bool): Whether box format is xywh (True) or xyxy (False).
