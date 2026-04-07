@@ -159,7 +159,7 @@ class DetectionTrainer(BaseTrainer):
         if self.args.cls_pw == 0.0:
             return
         classes = np.concatenate([lb["cls"].flatten() for lb in self.train_loader.dataset.labels], 0)
-        class_counts = np.bincount(classes.astype(int), minlength=self.data["nc"]).astype(float)
+        class_counts = np.bincount(classes.astype(int), minlength=self.data["nc"]).astype(np.float32)
         class_counts = np.where(class_counts == 0, 1.0, class_counts)
 
         weights = (1.0 / class_counts) ** self.args.cls_pw  # apply power directly
